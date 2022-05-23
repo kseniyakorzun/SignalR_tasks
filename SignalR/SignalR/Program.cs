@@ -11,7 +11,8 @@ namespace SignalRSelfHost
         static void Main(string[] args)
         {
             try
-            {
+            { 
+
                 var connection = new HubConnectionBuilder()
                     .WithUrl("https://localhost:7182/hub1")
                     .AddJsonProtocol(options =>
@@ -45,10 +46,11 @@ namespace SignalRSelfHost
 
         static void JsonToHub(HubConnection? connection)
         {
-            User user = new User { Name = "Kseniya", Role = "Developer" };
-            string json = JsonConvert.SerializeObject(user);
+            JsonSerializerSettings? settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            var user = new Worker { Name = "Kseniya", Surname = "Korzun", Occupation = "Developer" };
+            string json = JsonConvert.SerializeObject(user, settings);
 
-            connection.On<User>("ReceiveJson", Console.WriteLine);
+            connection.On<Human>("ReceiveJson", Console.WriteLine);
 
             connection.StartAsync().Wait();
             while (true)

@@ -1,9 +1,19 @@
 using SignalRAspNet;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR().AddJsonProtocol(options => { options.PayloadSerializerOptions.PropertyNamingPolicy = null; }).AddNewtonsoftJsonProtocol(); ;
+
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.TypeNameHandling = TypeNameHandling.All;
+        options.AllowInputFormatterExceptionMessages = false;
+    });
 
 var app = builder.Build();
 
